@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GameZone - Free Online Games</title>
+<meta name="description" content="Play free online mini games on GameZone.">
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;background:#101124;color:white;
+  font-family:Arial,sans-serif
+}
+header{
+  padding:20px;text-align:center;
+  background:#201b45;color:#9efcff
+}
+main{max-width:700px;margin:auto;padding:16px}
+h2{color:#b6a4ff}
+.card{
+  background:#20213b;padding:18px;
+  border-radius:14px;margin:16px 0
+}
+button{
+  border:0;border-radius:10px;padding:13px 20px;
+  background:#7c4dff;color:white;font-size:16px;
+  cursor:pointer
+}
+#target{
+  display:none;width:100%;height:150px;
+  background:#303152;border-radius:12px;
+  margin-top:15px;position:relative
+}
+#tap{
+  position:absolute;left:42%;top:40%;
+  padding:12px;border-radius:50%;
+  background:#00e5ff;color:#111
+}
+footer{text-align:center;padding:20px;color:#bbb}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎮 GameZone</h1>
+  <p>Play Free. Have Fun!</p>
+</header>
+
+<main>
+  <h2>Popular Games</h2>
+
+  <section class="card">
+    <h3>⚡ Tap Challenge</h3>
+    <p>Tap the glowing button as many times
+       as you can in 15 seconds!</p>
+    <button id="start">Play Now</button>
+    <p id="score">Score: 0</p>
+    <p id="timer">Time: 15</p>
+    <div id="target">
+      <button id="tap">TAP!</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>🕹️ More Games Coming Soon</h3>
+    <p>New free browser games will be added here.</p>
+  </section>
+
+  <section class="card">
+    <h3>About GameZone</h3>
+    <p>GameZone is a home for simple,
+       fun browser games on mobile devices.</p>
+  </section>
+</main>
+
+<footer>
+  <p>Contact | Privacy Policy</p>
+  <p>© 2026 GameZone</p>
+</footer>
+
+<script>
+const start=document.getElementById('start');
+const target=document.getElementById('target');
+const tap=document.getElementById('tap');
+const scoreText=document.getElementById('score');
+const timerText=document.getElementById('timer');
+let score=0,time=15,playing=false,clock;
+
+start.onclick=()=>{
+  clearInterval(clock);
+  score=0;time=15;playing=true;
+  scoreText.textContent='Score: 0';
+  timerText.textContent='Time: 15';
+  target.style.display='block';
+  start.disabled=true;
+  clock=setInterval(()=>{
+    time--;
+    timerText.textContent='Time: '+time;
+    if(time<=0){
+      clearInterval(clock);
+      playing=false;
+      target.style.display='none';
+      start.disabled=false;
+      start.textContent='Play Again';
+      timerText.textContent='Time up!';
+    }
+  },1000);
+};
+tap.onclick=()=>{
+  if(!playing)return;
+  score++;
+  scoreText.textContent='Score: '+score;
+  tap.style.left=Math.floor(Math.random()*70)+'%';
+  tap.style.top=Math.floor(Math.random()*65)+'%';
+};
+</script>
+</body>
+</html>
