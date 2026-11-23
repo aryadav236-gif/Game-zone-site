@@ -1,118 +1,454 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GameZone - Free Online Games</title>
-<meta name="description" content="Play free online mini games on GameZone.">
-<style>
-*{box-sizing:border-box}
-body{
-  margin:0;background:#101124;color:white;
-  font-family:Arial,sans-serif
-}
-header{
-  padding:20px;text-align:center;
-  background:#201b45;color:#9efcff
-}
-main{max-width:700px;margin:auto;padding:16px}
-h2{color:#b6a4ff}
-.card{
-  background:#20213b;padding:18px;
-  border-radius:14px;margin:16px 0
-}
-button{
-  border:0;border-radius:10px;padding:13px 20px;
-  background:#7c4dff;color:white;font-size:16px;
-  cursor:pointer
-}
-#target{
-  display:none;width:100%;height:150px;
-  background:#303152;border-radius:12px;
-  margin-top:15px;position:relative
-}
-#tap{
-  position:absolute;left:42%;top:40%;
-  padding:12px;border-radius:50%;
-  background:#00e5ff;color:#111
-}
-footer{text-align:center;padding:20px;color:#bbb}
-</style>
-</head>
-<body>
-<header>
-  <h1>🎮 GameZone</h1>
-  <p>Play Free. Have Fun!</p>
-</header>
-
-<main>
-  <h2>Popular Games</h2>
-
-  <section class="card">
-    <h3>⚡ Tap Challenge</h3>
-    <p>Tap the glowing button as many times
-       as you can in 15 seconds!</p>
-    <button id="start">Play Now</button>
-    <p id="score">Score: 0</p>
-    <p id="timer">Time: 15</p>
-    <div id="target">
-      <button id="tap">TAP!</button>
-    </div>
-  </section>
-
-  <section class="card">
-    <h3>🕹️ More Games Coming Soon</h3>
-    <p>New free browser games will be added here.</p>
-  </section>
-
-  <section class="card">
-    <h3>About GameZone</h3>
-    <p>GameZone is a home for simple,
-       fun browser games on mobile devices.</p>
-  </section>
-</main>
-
-<footer>
-  <p>Contact | Privacy Policy</p>
-  <p>© 2026 GameZone</p>
-</footer>
-
-<script>
-const start=document.getElementById('start');
-const target=document.getElementById('target');
-const tap=document.getElementById('tap');
-const scoreText=document.getElementById('score');
-const timerText=document.getElementById('timer');
-let score=0,time=15,playing=false,clock;
-
-start.onclick=()=>{
-  clearInterval(clock);
-  score=0;time=15;playing=true;
-  scoreText.textContent='Score: 0';
-  timerText.textContent='Time: 15';
-  target.style.display='block';
-  start.disabled=true;
-  clock=setInterval(()=>{
-    time--;
-    timerText.textContent='Time: '+time;
-    if(time<=0){
-      clearInterval(clock);
-      playing=false;
-      target.style.display='none';
-      start.disabled=false;
-      start.textContent='Play Again';
-      timerText.textContent='Time up!';
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NepalPlay Arena — Play Skill Games & Earn Rewards</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      background-color: #0B0F19;
+      color: #F8FAFC;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
-  },1000);
-};
-tap.onclick=()=>{
-  if(!playing)return;
-  score++;
-  scoreText.textContent='Score: '+score;
-  tap.style.left=Math.floor(Math.random()*70)+'%';
-  tap.style.top=Math.floor(Math.random()*65)+'%';
-};
-</script>
+    .glass {
+      background: rgba(20, 27, 45, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .neon-cyan {
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
+    }
+    .neon-purple {
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.35);
+    }
+  </style>
+</head>
+<body class="pb-24">
+
+  <!-- Top Navbar -->
+  <header class="sticky top-0 z-50 glass border-b border-slate-800 px-4 py-3">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center font-bold text-slate-950">
+          <i class="fa-solid fa-gamepad"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-base leading-tight tracking-wide">NepalPlay <span class="text-cyan-400">Arena</span></h1>
+          <p class="text-[11px] text-slate-400">Free Skill Games • eSewa/Khalti</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="bg-slate-900 border border-cyan-500/40 rounded-full px-3 py-1.5 flex items-center gap-2">
+          <i class="fa-solid fa-coins text-yellow-400 text-sm"></i>
+          <span id="coinBalance" class="font-bold text-sm text-cyan-300">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto px-4 pt-5 space-y-6">
+
+    <!-- ================= HOME / GAMES SECTION ================= -->
+    <section id="tab-home" class="space-y-6">
+      <!-- Hero Banner -->
+      <div class="rounded-2xl bg-gradient-to-r from-indigo-900/90 via-purple-900/80 to-cyan-900/80 p-5 border border-purple-500/30 relative overflow-hidden">
+        <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span class="text-xs uppercase tracking-wider bg-cyan-400/20 text-cyan-300 px-2.5 py-1 rounded-full font-semibold">100% Free to Play</span>
+            <h2 class="text-2xl font-extrabold mt-2">Play Skill Games, Earn Coins</h2>
+            <p class="text-sm text-slate-300 mt-1">100 Coins = Rs. 1 NPR • Direct Redeem to eSewa or Khalti</p>
+          </div>
+          <button id="dailyBonusBtn" onclick="claimDailyBonus()" class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-sm neon-cyan transition shrink-0">
+            <i class="fa-solid fa-gift mr-1"></i> Claim +100 Daily Bonus
+          </button>
+        </div>
+      </div>
+
+      <!-- Games Grid -->
+      <div>
+        <h3 class="text-lg font-bold mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-fire text-orange-400"></i> Featured Skill Games
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Game 1: GK Quiz -->
+          <div class="glass rounded-2xl p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="w-11 h-11 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl">
+                  <i class="fa-solid fa-brain"></i>
+                </span>
+                <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-full font-medium">+50 Coins / Win</span>
+              </div>
+              <h4 class="font-bold text-lg mt-3">Nepal GK & Tech Quiz</h4>
+              <p class="text-xs text-slate-400 mt-1">Sahi jawab dein aur har question par instant coins kamayein.</p>
+            </div>
+            <button onclick="openQuizGame()" class="mt-4 w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2.5 rounded-xl text-sm neon-purple transition">
+              Play Quiz Now
+            </button>
+          </div>
+
+          <!-- Game 2: Speed Tap -->
+          <div class="glass rounded-2xl p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="w-11 h-11 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl">
+                  <i class="fa-solid fa-bolt"></i>
+                </span>
+                <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-full font-medium">Up to +100 Coins</span>
+              </div>
+              <h4 class="font-bold text-lg mt-3">10-Sec Speed Tap</h4>
+              <p class="text-xs text-slate-400 mt-1">10 second me jitna tez tap karenge, utne zyada coins milenge.</p>
+            </div>
+            <button onclick="openTapGame()" class="mt-4 w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-sm neon-cyan transition">
+              Start Speed Tap
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Game Arena (Hidden until a game is opened) -->
+      <div id="gameArena" class="hidden glass rounded-2xl p-5 border border-cyan-500/40">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+          <h3 id="arenaTitle" class="font-bold text-lg text-cyan-300">Game Arena</h3>
+          <button onclick="closeArena()" class="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-slate-300">
+            <i class="fa-solid fa-xmark mr-1"></i> Close
+          </button>
+        </div>
+        <div id="arenaBody"></div>
+      </div>
+    </section>
+
+    <!-- ================= WALLET / WITHDRAW SECTION ================= -->
+    <section id="tab-wallet" class="hidden space-y-5">
+      <div class="glass rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-cyan-500/30">
+        <div>
+          <p class="text-xs text-slate-400 uppercase tracking-wider">Available Balance</p>
+          <div class="flex items-baseline gap-2 mt-1">
+            <span id="walletCoins" class="text-3xl font-extrabold text-cyan-400">0</span>
+            <span class="text-sm text-slate-300">Coins</span>
+          </div>
+          <p class="text-sm text-emerald-400 font-semibold mt-1">≈ Rs. <span id="walletNpr">0.00</span> NPR</p>
+        </div>
+        <div class="text-xs text-slate-400 bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+          <p><i class="fa-solid fa-circle-info text-cyan-400 mr-1"></i> Min Withdraw: <b>500 Coins (Rs. 5)</b></p>
+          <p class="mt-1"><i class="fa-solid fa-clock text-purple-400 mr-1"></i> Payout Time: Within 24 Hours</p>
+        </div>
+      </div>
+
+      <!-- Withdraw Form -->
+      <div class="glass rounded-2xl p-5">
+        <h3 class="font-bold text-lg mb-4">Redeem to eSewa / Khalti</h3>
+        <form onsubmit="submitWithdraw(event)" class="space-y-4">
+          <div class="grid grid-cols-2 gap-3">
+            <label class="cursor-pointer">
+              <input type="radio" name="method" value="eSewa" checked class="peer hidden" />
+              <div class="peer-checked:border-emerald-400 peer-checked:bg-emerald-500/15 border border-slate-700 rounded-xl p-3 text-center font-bold text-sm transition">
+                <i class="fa-solid fa-wallet text-emerald-400 mr-1"></i> eSewa
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="method" value="Khalti" class="peer hidden" />
+              <div class="peer-checked:border-purple-400 peer-checked:bg-purple-500/15 border border-slate-700 rounded-xl p-3 text-center font-bold text-sm transition">
+                <i class="fa-solid fa-wallet text-purple-400 mr-1"></i> Khalti
+              </div>
+            </label>
+          </div>
+
+          <div>
+            <label class="text-xs text-slate-400 block mb-1">Mobile Number (eSewa / Khalti ID)</label>
+            <input id="wdPhone" type="tel" required placeholder="98XXXXXXXX" pattern="[0-9]{10}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-cyan-400" />
+          </div>
+
+          <div>
+            <label class="text-xs text-slate-400 block mb-1">Coins to Redeem (Min 500)</label>
+            <input id="wdCoins" type="number" required min="500" step="100" value="500" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-cyan-400" />
+          </div>
+
+          <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white font-bold py-3 rounded-xl text-sm transition">
+            Submit Withdraw Request
+          </button>
+        </form>
+      </div>
+
+      <!-- History -->
+      <div class="glass rounded-2xl p-5">
+        <h3 class="font-bold text-base mb-3">Recent Withdrawals</h3>
+        <div id="userWithdrawList" class="space-y-2 text-sm text-slate-400">
+          No withdrawal requests yet.
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ADMIN CONTROL PANEL ================= -->
+    <section id="tab-admin" class="hidden space-y-5">
+      <div class="glass rounded-2xl p-5 border border-purple-500/40">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-lg text-purple-300"><i class="fa-solid fa-shield-halved mr-2"></i>Admin Control Panel</h3>
+            <p class="text-xs text-slate-400">Manage pending eSewa/Khalti payout requests</p>
+          </div>
+          <button onclick="addTestCoins()" class="text-xs bg-slate-800 hover:bg-slate-700 text-cyan-300 px-3 py-2 rounded-lg border border-cyan-500/30">
+            +500 Test Coins
+          </button>
+        </div>
+
+        <div id="adminWithdrawList" class="space-y-3">
+          <p class="text-sm text-slate-400">No pending requests.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-20 right-4 z-50 hidden bg-slate-900 border border-cyan-400 text-cyan-200 px-4 py-2.5 rounded-xl text-sm font-medium shadow-lg"></div>
+
+  <!-- Bottom Navigation Bar (Mobile App Style) -->
+  <nav class="fixed bottom-0 left-0 right-0 glass border-t border-slate-800 z-50">
+    <div class="max-w-4xl mx-auto grid grid-cols-3 py-2">
+      <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center gap-1 text-cyan-400">
+        <i class="fa-solid fa-gamepad text-lg"></i>
+        <span class="text-[11px] font-semibold">Games</span>
+      </button>
+      <button onclick="switchTab('wallet')" id="nav-wallet" class="flex flex-col items-center gap-1 text-slate-400">
+        <i class="fa-solid fa-wallet text-lg"></i>
+        <span class="text-[11px] font-semibold">Wallet</span>
+      </button>
+      <button onclick="switchTab('admin')" id="nav-admin" class="flex flex-col items-center gap-1 text-slate-400">
+        <i class="fa-solid fa-user-shield text-lg"></i>
+        <span class="text-[11px] font-semibold">Admin</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    // --- STATE MANAGEMENT (LocalStorage) ---
+    let state = JSON.parse(localStorage.getItem('nepalPlayState')) || {
+      coins: 200,
+      lastBonusDate: null,
+      withdrawals: []
+    };
+
+    function saveState() {
+      localStorage.setItem('nepalPlayState', JSON.stringify(state));
+      renderUI();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 2800);
+    }
+
+    function renderUI() {
+      document.getElementById('coinBalance').textContent = state.coins;
+      document.getElementById('walletCoins').textContent = state.coins;
+      document.getElementById('walletNpr').textContent = (state.coins / 100).toFixed(2);
+
+      // Daily bonus button state
+      const today = new Date().toDateString();
+      const btn = document.getElementById('dailyBonusBtn');
+      if (state.lastBonusDate === today) {
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Claimed Today';
+      }
+
+      // Render User Withdrawals
+      const userList = document.getElementById('userWithdrawList');
+      const adminList = document.getElementById('adminWithdrawList');
+
+      if (state.withdrawals.length === 0) {
+        userList.innerHTML = '<p class="text-slate-500 text-xs">No withdrawal requests yet.</p>';
+        adminList.innerHTML = '<p class="text-slate-500 text-xs">No payout requests to review.</p>';
+      } else {
+        userList.innerHTML = state.withdrawals.map(w => `
+          <div class="flex items-center justify-between bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+            <div>
+              <p class="font-semibold text-white">${w.method} • ${w.phone}</p>
+              <p class="text-xs text-slate-400">${w.coins} Coins (Rs. ${(w.coins/100).toFixed(2)}) • ${w.date}</p>
+            </div>
+            <span class="text-xs font-bold px-2.5 py-1 rounded-full ${
+              w.status === 'Paid' ? 'bg-emerald-500/20 text-emerald-400' :
+              w.status === 'Rejected' ? 'bg-red-500/20 text-red-400' :
+              'bg-amber-500/20 text-amber-300'
+            }">${w.status}</span>
+          </div>
+        `).join('');
+
+        adminList.innerHTML = state.withdrawals.map((w, idx) => `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+            <div>
+              <p class="font-bold text-sm text-white">${w.method} — ${w.phone}</p>
+              <p class="text-xs text-slate-400">Amount: <b class="text-cyan-300">Rs. ${(w.coins/100).toFixed(2)}</b> (${w.coins} Coins) | Status: <b>${w.status}</b></p>
+            </div>
+            ${w.status === 'Pending' ? `
+              <div class="flex gap-2">
+                <button onclick="updateWithdraw(${idx}, 'Paid')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg">Approve (Paid)</button>
+                <button onclick="updateWithdraw(${idx}, 'Rejected')" class="bg-red-600 hover:bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg">Reject</button>
+              </div>
+            ` : `<span class="text-xs text-slate-500 font-semibold">Processed</span>`}
+          </div>
+        `).join('');
+      }
+    }
+
+    function switchTab(tab) {
+      ['home', 'wallet', 'admin'].forEach(t => {
+        document.getElementById('tab-' + t).classList.add('hidden');
+        document.getElementById('nav-' + t).classList.replace('text-cyan-400', 'text-slate-400');
+      });
+      document.getElementById('tab-' + tab).classList.remove('hidden');
+      document.getElementById('nav-' + tab).classList.replace('text-slate-400', 'text-cyan-400');
+    }
+
+    function claimDailyBonus() {
+      const today = new Date().toDateString();
+      if (state.lastBonusDate === today) return;
+      state.coins += 100;
+      state.lastBonusDate = today;
+      saveState();
+      showToast('+100 Daily Bonus Coins Added!');
+    }
+
+    function addTestCoins() {
+      state.coins += 500;
+      saveState();
+      showToast('+500 Test Coins Added!');
+    }
+
+    // --- WITHDRAWAL LOGIC ---
+    function submitWithdraw(e) {
+      e.preventDefault();
+      const method = document.querySelector('input[name="method"]:checked').value;
+      const phone = document.getElementById('wdPhone').value.trim();
+      const coins = parseInt(document.getElementById('wdCoins').value, 10);
+
+      if (coins < 500) return showToast('Minimum 500 coins required.');
+      if (coins > state.coins) return showToast('Insufficient coin balance!');
+
+      state.coins -= coins;
+      state.withdrawals.unshift({
+        method, phone, coins,
+        status: 'Pending',
+        date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
+      saveState();
+      e.target.reset();
+      showToast('Withdraw request submitted!');
+    }
+
+    function updateWithdraw(index, status) {
+      const req = state.withdrawals[index];
+      if (!req || req.status !== 'Pending') return;
+      req.status = status;
+      if (status === 'Rejected') {
+        state.coins += req.coins; // Refund coins
+      }
+      saveState();
+      showToast(`Request marked as ${status}`);
+    }
+
+    // --- GAME 1: NEPAL GK & TECH QUIZ ---
+    const quizData = [
+      { q: "Nepal ka sabse uncha shikhar kaunsa hai?", opts: ["Kanchenjunga", "Mount Everest", "Annapurna", "Machhapuchhre"], ans: 1 },
+      { q: "Janakpur Nepal ke kis province me sthit hai?", opts: ["Bagmati", "Koshi", "Madhesh", "Lumbini"], ans: 2 },
+      { q: "HTML ka full form kya hota hai?", opts: ["Hyper Text Markup Language", "High Tech Modern Link", "Hyper Tool Multi Language", "Home Text Mode Language"], ans: 0 },
+      { q: "Nepal ki rashtriya mudra (currency) kya hai?", opts: ["Dollar", "Rupee (NPR)", "Taka", "Yen"], ans: 1 }
+    ];
+
+    function openQuizGame() {
+      const arena = document.getElementById('gameArena');
+      arena.classList.remove('hidden');
+      document.getElementById('arenaTitle').textContent = 'Nepal GK & Tech Quiz';
+      loadQuizQuestion();
+      arena.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function loadQuizQuestion() {
+      const item = quizData[Math.floor(Math.random() * quizData.length)];
+      document.getElementById('arenaBody').innerHTML = `
+        <p class="font-semibold text-base mb-4">${item.q}</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          ${item.opts.map((o, i) => `
+            <button onclick="checkQuiz(${i}, ${item.ans})" class="bg-slate-900 hover:bg-purple-600/30 border border-slate-700 hover:border-purple-400 text-left px-4 py-3 rounded-xl text-sm transition">
+              ${o}
+            </button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function checkQuiz(selected, correct) {
+      if (selected === correct) {
+        state.coins += 50;
+        saveState();
+        showToast('Sahi Jawab! +50 Coins Earned');
+      } else {
+        showToast('Galat Jawab! Agla question try karein.');
+      }
+      loadQuizQuestion();
+    }
+
+    // --- GAME 2: 10-SEC SPEED TAP ---
+    let tapCount = 0;
+    let tapTimer = null;
+
+    function openTapGame() {
+      const arena = document.getElementById('gameArena');
+      arena.classList.remove('hidden');
+      document.getElementById('arenaTitle').textContent = '10-Sec Speed Tap Challenge';
+      document.getElementById('arenaBody').innerHTML = `
+        <div class="text-center space-y-4 py-2">
+          <p class="text-sm text-slate-300">10 second me jitna zyada tap kar sakte hain karein! (Har tap = +2 Coins)</p>
+          <div class="flex justify-center gap-6 text-lg font-bold">
+            <span class="text-cyan-400">Time: <b id="tapTime">10</b>s</span>
+            <span class="text-yellow-400">Taps: <b id="tapScore">0</b></span>
+          </div>
+          <button id="tapBtn" onclick="startOrTap()" class="w-40 h-40 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 text-slate-950 font-extrabold text-xl shadow-lg active:scale-95 transition">
+            TAP!
+          </button>
+        </div>
+      `;
+      arena.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function startOrTap() {
+      if (!tapTimer) {
+        tapCount = 1;
+        let timeLeft = 10;
+        document.getElementById('tapScore').textContent = tapCount;
+        tapTimer = setInterval(() => {
+          timeLeft--;
+          document.getElementById('tapTime').textContent = timeLeft;
+          if (timeLeft <= 0) {
+            clearInterval(tapTimer);
+            tapTimer = null;
+            const reward = Math.min(tapCount * 2, 100);
+            state.coins += reward;
+            saveState();
+            showToast(`Time Up! You earned +${reward} Coins!`);
+            openTapGame();
+          }
+        }, 1000);
+      } else {
+        tapCount++;
+        document.getElementById('tapScore').textContent = tapCount;
+      }
+    }
+
+    function closeArena() {
+      if (tapTimer) { clearInterval(tapTimer); tapTimer = null; }
+      document.getElementById('gameArena').classList.add('hidden');
+    }
+
+    // Initialize
+    renderUI();
+  </script>
 </body>
 </html>
